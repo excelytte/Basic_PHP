@@ -60,23 +60,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // validating if its an email
     if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $email_error = "Enter a";
+        $email_error = "Enter a valid Email";
     }
     //to check the length of the password
     if (!empty($password) && strlen($password) < 6) {
         $password_error = "Password cannot be less 6 characters";
     }
 
+    $allChecks = empty($password_error) && empty($email_error) && empty($name_error);
+
     // validating the file uploaded 
-    if (isset($_FILES['image']['name'])) {
-        uplaodFile($_FILES['image'], [' png',' jpg',' gif',' jpeg'], $image_error);
+    if (isset($_FILES['image']['name']) && !empty($_FILES['image']['name'])) {
+
+        if($allChecks){
+            uplaodFile($_FILES['image'], ['png','jpg','gif','jpeg'], $image_error);
+        }
+        
     } else {
         $image_error = "The image is required";
     }
 
 
     //checking if all errors are cleared and redirecting
-    if (empty($password_error) && empty($email_error) && empty($name_error) && empty($image_error)) {
+    if ($allChecks && empty($image_error)) {
 
         
 
